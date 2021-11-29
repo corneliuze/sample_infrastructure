@@ -14,12 +14,13 @@ jobs:
         - run:
             name: Create Cloudformation Stack
             command: |
-              aws cloudformation create-stack \
-                --stack-name myStack \
+              aws cloudformation deploy \
                 --template-file template.yml \
-                --region=us-east-1
+                --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+                --region us-east-1
 # Sequential workflow
 workflows:
+  # Name the workflow
   myWorkflow:
     jobs:
       - create_infrastructure
