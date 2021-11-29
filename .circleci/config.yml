@@ -14,9 +14,10 @@ jobs:
         - run:
             name: Create Cloudformation Stack
             command: |
-              aws cloudformation deploy \
+              aws cloudformation create-stack \
                 --template-file template.yml \
-                --stack-name myStack
+                --stack-name myStack \
+                --region us-east-2
 # Sequential workflow
 workflows:
   myWorkflow:
