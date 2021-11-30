@@ -2,24 +2,25 @@ version: 2.1
 # Use a package of configuration called an orb.
 orbs:
 jobs:
-  configure_infrastructure: 
+  smoke_test:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: alpine:latest
     steps:
-      - checkout
-      - add_ssh_keys:
-              fingerprints: ["52:77:6b:5e:4c:7f:f6:08:6d:0b:c2:2a:ba:c0:52:f1"] 
+      - run: apk add --update curl
       - run:
-          name: Install Ansible
+          name: smoke test
           command: |
-            apk add --update ansible
-      - run:
-          name: Run Playbook and Configure server
-          command: |
-            ansible-playbook -i inventory main.yml
+            URL="https://blog.udacity.com/"
+            # Test if website exists
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
 # Sequential workflow
 workflows:
   # Name the workflow
   myWorkflow:
     jobs:
-      - configure_infrastructure
+      - smoke_test
