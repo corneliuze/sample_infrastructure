@@ -3,9 +3,10 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Bucket name
 Parameters:
 # Existing Bucket name
-PipelineID:
-  Description: Existing Bucket name
-  Type: String
+# PipelineID:
+#   Description: Existing Bucket name
+#   Type: String
+
 Resources:
     CloudFrontOriginAccessIdentity:
       Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
@@ -17,7 +18,7 @@ Resources:
       Properties:
         DistributionConfig:
           Origins:
-            - DomainName: !Sub "${PipelineID}.s3.amazonaws.com"
+            - DomainName:  "myfalaybucket.s3.amazonaws.com"
               Id: webpage
               S3OriginConfig:
                 OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
@@ -31,6 +32,6 @@ Resources:
 
 Outputs:
     PipelineID:
-      Value: !Sub ${PipelineID}
+      Value: myfalaybucket
       Export:
-        Name: PipelineID
+        Name: myfalaybucket
