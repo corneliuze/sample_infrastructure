@@ -42,9 +42,7 @@ jobs:
           command: |
               aws cloudformation deploy \
                 --template-file template.yml \
-                --stack-name production-distro \
-                --parameter-overrides PipelineID="myfalaybucket" 
-
+                --stack-name production-distro
 
 # Sequential workflow
 workflows:
