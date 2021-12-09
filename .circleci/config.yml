@@ -51,7 +51,7 @@ workflows:
   # Name the workflow
   myWorkflow:
     jobs:
-      - create_infrastructure:
+      - lift_infra:
           filters:
             branches:
               only:
