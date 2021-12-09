@@ -1,4 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
+
 Description: Bucket name
 Parameters:
 # Existing Bucket name
@@ -27,7 +28,8 @@ Resources:
               QueryString: False
             TargetOriginId: webpage
             ViewerProtocolPolicy: allow-all
-  Outputs:
+
+Outputs:
     PipelineID:
       Value: !Sub ${PipelineID}
       Export:

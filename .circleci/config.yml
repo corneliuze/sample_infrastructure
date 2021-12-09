@@ -31,19 +31,20 @@ jobs:
       - run:
           name: Test job
           command:  return 1
-      - destroy_environment
-  lift_infra:
+  
+  lift_infra: 
     docker:
       - image: amazon/aws-cli
     steps:
       - checkout
       - run:
-          name: Create S3
-          command: | 
-            aws cloudformation deploy \
-              --template-file cloudfront.yml \
-              --stack-name production-distro \
-              --parameter-overrides PipelineID="myfalaybucket" \ # Name of the S3 bucket you created manually.
+          name: Create Cloudfront CDN.
+          command: |
+              aws cloudformation deploy \
+                --template-file template.yml \
+                --stack-name production-distro \
+                --parameter-overrides PipelineID="${myfalaybucket}" 
+
 
 # Sequential workflow
 workflows:
