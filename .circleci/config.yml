@@ -10,28 +10,6 @@ commands:
            command: |
              aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7}
 jobs:
-  # Exercise - Rollback
-  create_infrastructure: 
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Create Cloudformation Stack
-          command: |
-            aws cloudformation deploy \
-              --template-file template.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
-              --region us-east-1
-  smoke_test:
-    docker:
-      - image: alpine:latest
-    steps:
-      - run: apk add --update curl
-      - run:
-          name: Test job
-          command:  return 1
-  
   create_and_deploy_front_end:
     docker:
       - image: amazon/aws-cli
@@ -65,33 +43,33 @@ jobs:
             - textfile.txt 
   
   promote_to_production:
-  docker:
-    - image: amazon/aws-cli
-  steps:
-    - checkout
-    - run:
-        name: Execute cloudfront.yml
-        command: |
-          aws cloudformation deploy \
-          --template-file cloudfront.yml \
-          --stack-name production-distro \
-          --parameter-overrides PipelineID="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Execute cloudfront.yml
+          command: |
+            aws cloudformation deploy \
+            --template-file cloudfront.yml \
+            --stack-name production-distro \
+            --parameter-overrides PipelineID="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
   
   clean_up_old_front_end:
-  docker:
-    - image: amazon/aws-cli
-  steps:
-    - checkout
-    - run: yum install -y tar gzip
-    - attach_workspace:
-        at: ~/
-    - run:
-        name: Destroy the previous S3 bucket and CloudFormation stack. 
-        # Use $OldBucketID environment variable or mybucket644752792305 below.
-        # Similarly, you can create and use $OldStackID environment variable in place of production-distro 
-        command: |
-          export OldBucketID=$(cat ~/textfile.txt)
-          aws s3 rm "s3://myfalaybucket" --recursive
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: yum install -y tar gzip
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Destroy the previous S3 bucket and CloudFormation stack. 
+          # Use $OldBucketID environment variable or mybucket644752792305 below.
+          # Similarly, you can create and use $OldStackID environment variable in place of production-distro 
+          command: |
+            export OldBucketID=$(cat ~/textfile.txt)
+            aws s3 rm "s3://myfalaybucket" --recursive
 
 # Sequential workflow
 workflows:
